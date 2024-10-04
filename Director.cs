@@ -7,19 +7,22 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace Centaurus
 {
     public class Director
     {
-        private string? version;
-        private string? cachePath; // TODO: Implement caching
-
         private readonly Dictionary<string, MethodInfo> commands = [];
 
         public Director()
         {
-            commands = (
+            commands = GetMethods();
+        }
+
+        private static Dictionary<string, MethodInfo> GetMethods()
+        {
+            return (
                 from type in Assembly.GetExecutingAssembly().GetTypes()
                 let cca = type.GetCustomAttribute<CommandClassAttribute>()
                 where cca != null
